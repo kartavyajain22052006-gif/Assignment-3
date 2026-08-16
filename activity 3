@@ -1,0 +1,83 @@
+from abc import ABC, abstractmethod
+
+# 1. Abstract Strategy
+class PaymentStrategy(ABC):
+    @abstractmethod
+    def pay(self, amount):
+        pass
+
+# 2. Concrete Strategy 1
+class CreditPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Processing credit card payment of {amount}.")
+
+# 3. Concrete Strategy 2
+class DebitPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Amount debited from your Account of {amount}.")
+
+# 4. Concrete Strategy 3
+class UpiPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Processing UPI payment of {amount}.")
+
+# 5. Concrete Strategy 4
+class NetBanking(PaymentStrategy):
+    def pay(self, amount):
+        print(f"Processing Net Banking payment of {amount}.")
+
+# 6. Context (Main call)
+class PaymentProcessor:
+    def __init__(self, strategy=None):
+        self.strategy = strategy
+
+    def set_strategy(self, strategy):
+        self.strategy = strategy
+
+    def process_payment(self, amount):
+        if self.strategy is None:
+            print("No payment method is selected.")
+        else:
+            self.strategy.pay(amount)
+
+# Driver code
+if __name__ == "__main__":
+    processor = PaymentProcessor()
+    
+    try:
+        while True:
+            print("\n++++++++++++++++ PAYMENT PROCESSING SYSTEM ++++++++++++++++")
+            print("1. Credit Card")
+            print("2. Debit Card")
+            print("3. UPI Payment")
+            print("4. Net Banking")
+            print("5. Exit") 
+            
+            choice = int(input("Enter your choice: "))
+
+            if choice == 5:
+                print("Exiting the payment processing system.")
+                break
+                
+            amount = float(input("Enter payment amount: "))
+
+            # Set the appropriate strategy based on user input
+            if choice == 1:
+                processor.set_strategy(CreditPayment())
+            elif choice == 2:
+                processor.set_strategy(DebitPayment())
+            elif choice == 3:
+                processor.set_strategy(UpiPayment())
+            elif choice == 4:
+                processor.set_strategy(NetBanking())
+            else:
+                print("Invalid input, please try again.")
+                continue # Skip processing and go back to menu
+            
+            # Actually process the payment!
+            processor.process_payment(amount)
+
+    except ValueError:
+        print("Invalid input. Please enter numbers only.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}. Please try again.")
